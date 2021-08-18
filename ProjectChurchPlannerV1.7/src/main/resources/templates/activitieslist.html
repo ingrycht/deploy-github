@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Activities details</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        
+       
+        <div>
+            <h1>Activities details</h1>
+            <table border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Activity ID</th>
+                        <th>Activity Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Duration</th>
+                        <!--<th>organizer</th>-->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- th is a thymeLeaf syntax -->
+                    <tr th:each="activity ${listactivities}">
+                        <td th:text="${activity.activityID}">Activity ID</td>
+                        <td th:text="${activity.activityname}">Member Name</td>
+                        <td th:text="${activity.activitydate}">Date</td>
+                        <td th:text="${activity.activitytime}">Time</td>
+                        <td th:text="${activity.duration}">Duration</td>
+                        <!--<td th:text="${activity.organizer}">Organizer</td>-->
+                        <td>
+                            <a th:href="@{'/editactivity/' + ${activity.activityID}}" class="btn btn-warning editButton">Edit</a>
+                            &nbsp;&nbsp;
+                            <a th:href="@{'/deleteactivity/' + ${activity.activityID}}" class="btn btn-danger deleteButton">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

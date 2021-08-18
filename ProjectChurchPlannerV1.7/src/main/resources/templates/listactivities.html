@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:th="http://www.thymeLeaf.org"
+      xmlns:sec="https://www.thymeLeaf.org/thymeLeaf-extras-springsecurity5">
+    <head>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <title>Activities details</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <!--<div>Welcome to Church Planner</div>-->
+        <div align="right">
+            <div sec:authorize="isAuthenticated()">
+                Welcome <b><span  sec:authentication="name">Name</span></b>
+                &nbsp;
+                <span sec:authentication="principal.authorities">Roles</span>
+                <br/>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Logout" />
+
+                </form>
+            </div>
+
+            <!-- menu bar -->
+            <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand" href="/">HomePage</a>
+                <a class="navbar-brand" href="newmember">Create New Member</a>
+                <a class="navbar-brand" href="newactivity">Add New Activity</a>
+                <a class="navbar-brand" href="activities">Edit Activity</a>
+                <!--<a class="navbar-brand" href="@{'/editactivity/' + ${activity.activityID}}">Edit Activity</a>-->
+                <!--<a th:href="@{'/editmember/' + ${member.memberID}}" class="btn btn-warning editButton">Edit</a>-->
+            </nav>
+        </div>
+        <div>
+            <h1>Activities details</h1>
+            <table border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Activity ID</th>
+                        <th>Activity Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Duration</th>
+                        <th>Members</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- th is a thymeLeaf syntax -->
+                    <tr th:each="activity : ${listactivities}">
+                        <td th:text="${activity.activityID}">Activity ID</td>
+                        <td th:text="${activity.activityname}">Member Name</td>
+                        <td th:text="${activity.activitydate}">Date</td>
+                        <td th:text="${activity.activitytime}">Time</td>
+                        <td th:text="${activity.duration}">Duration</td>
+                        <td th:text="${activity.memberInvolded}">Duration</td>
+                        <td>
+                            <a th:href="@{'/editactivity/' + ${activity.activityID}}" class="btn btn-warning editButton">Edit</a>
+                            &nbsp;&nbsp;
+                            <a th:href="@{'/deleteactivity/' + ${activity.activityID}}" class="btn btn-danger deleteButton">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

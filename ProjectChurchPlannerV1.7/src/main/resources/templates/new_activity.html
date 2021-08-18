@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+Create a new activity
+-->
+<html xmlns:th="http://www.thymeLeaf.org"
+      xmlns:sec="https://www.thymeLeaf.org/thymeLeaf-extras-springsecurity5">
+    <head>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <title>Create New Activity</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <!--<div>Welcome to Church Planner</div>-->
+        <div align="right">
+            <div sec:authorize="isAuthenticated()">
+                Welcome <b><span  sec:authentication="name">Name</span></b>
+                &nbsp;
+                <span sec:authentication="principal.authorities">Roles</span>
+                <br/>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Logout" />
+
+                </form>
+            </div>
+
+            <!-- menu bar -->
+            <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand" href="/">HomePage</a>
+                <a class="navbar-brand" href="newmember">Create New Member</a>
+                <a class="navbar-brand" href="newactivity">Add New Activity</a>
+            </nav>
+        </div>
+        <div class="container col-md-12" align="center">
+            <div align="center" class="col-md-4"></div>
+            <h3 align="center" sec:authorize="hasAuthority('USER')">You do not have permission to create a new activity!</h3>
+            <a align="center" sec:authorize="hasAuthority('USER')" href="/">Go to the HomePage</a>
+            <div align="center" class="col-md-4" sec:authorize="hasAuthority('ADMIN')">
+                <h1>Create New Activity</h1>
+                <br/>
+                <form action="#" th:action="@{/save_activity}" th:object="${activity}" method="post">
+                    <table class="table table-striped" border="0" cellpadding="10">
+                        <tr>
+                            <td>Activity Name: </td>
+                            <td><input type="text" th:field="*{activityname}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Date: </td>
+                            <td><input type="text" th:field="*{activitydate}" /></td>
+                        </tr>
+                        <tr>
+                            <td>Time: </td>
+                            <td><input type="text" th:field="*{activitytime}" /></td>
+                        </tr>
+                        <tr>
+                            <td>Duration: </td>
+                            <td><input type="text" th:field="*{duration}" /></td>
+                        </tr>
+                        <tr>
+                            <td>Members Involved: </td>
+                            <td>
+                                <select th:field="*{memberID}" multiple="true">
+                                    <option th:each="member : ${members}" th:value="${member.getMemberID()}" th:text="${member.getName()}">
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center"><small class="form-text text-muted">Hold Ctrl key to select multiple members</small></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button type="submit">Save</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div align="center" class="col-md-4"></div>
+        </div>
+    </body>
+</html>

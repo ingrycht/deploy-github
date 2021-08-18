@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script >
+            function deleteFunction() {
+                var txt;
+                if (confirm("Are you sure you would like to delete this record?")) {
+
+                    txt = "The record has been deleted!";
+                } else {
+                    txt = "You've cancelled it!";
+                }
+                window.alert(txt);
+            }
+        </script>
+        <title>HomePage</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body>
+        <!--<div>Welcome to Church Planner</div>-->
+        <div align="right">
+            <div sec:authorize="isAuthenticated()">
+                Welcome <b><span  sec:authentication="name">Name</span></b>
+                &nbsp;
+                <span sec:authentication="principal.authorities">Roles</span>
+                <br/>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Logout" />
+
+                </form>
+            </div>
+
+            <!-- menu bar -->
+            <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand" href="/">HomePage</a>
+                <a class="navbar-brand" href="newmember">Create New Member</a>
+                <a class="navbar-brand" href="newactivity">Add New Activity</a>
+                <a class="navbar-brand" href="activities">Send Email</a>
+            </nav>
+        </div>
+        <div class="row header" align="center">
+            <div class="col-xs-12 text-center" align="center">
+                <h1>Welcome to Church Planner</h1>
+            </div>
+        </div>
+
+        <div  class="col-sm-2"></div>
+        <div sec:authorize="hasAuthority('USER')" class="col-sm-4">
+            <h1>My details</h1>
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">Member Name</th>
+                    <td th:text="${user.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Address</th>
+                    <td th:text="${user.address}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Town</th>
+                    <td th:text="${user.town}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">City</th>
+                    <td th:text="${user.city}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Postcode</th>
+                    <td th:text="${user.postcode}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Date of Birth</th>
+                    <td th:text="${user.dob}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Phone Number</th>
+                    <td th:text="${user.phone}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Email</th>
+                    <td th:text="${user.email}"></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td><a th:href="@{'/editmember/' + ${user.memberID}}" class="btn btn-warning trigger-btn editButton">Edit</a></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="col-sm-0"></div>
+        <div sec:authorize="hasAuthority('USER')" class="col-sm-4">
+            <h1>My Activities</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Activity ID</th>
+                        <th>Activity Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- th is a thymeLeaf syntax th:src="${'photoCat?idCat=' + cat.idCategorie}" -->
+                    <tr th:each="activity : ${membersInvolved}">
+                        <td th:text="${activity.activityID}">Activity ID</td>
+                        <td th:text="${activity.activityname}">Activity Name</td>
+                        <td th:text="${activity.activitydate}">Date</td>
+                        <td th:text="${activity.activitytime}">Time</td>
+                        <td th:text="${activity.duration}">Duration</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div sec:authorize="hasAuthority('ADMIN')" class="col-md-12">
+        <div class="col-sm-6 pull-center">
+            <h4>Search member by name</h4>
+            <form th:action="@{/search/}" method="get">
+                <input id="txtSearch" type="text" name="keyword"/>
+                <button type="submit" >Search</button>
+            </form>
+            
+            <h1>Member details</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Member ID</th>
+                        <th scope="col">Member Name</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- th is a thymeLeaf syntax -->
+                    <tr th:each="member: ${listMembers}">
+                        <td th:text="${member.memberID}">Member ID</td>
+                        <td th:text="${member.name}">Member Name</td>
+                        <td th:text="${member.phone}">Phone Number</td>
+                        <td th:text="${member.email}">Email</td>
+                        <td>
+                            <a th:href="@{'/editmember/' + ${member.memberID}}" class="btn btn-warning trigger-btn editButton">Edit</a>
+                            &nbsp;&nbsp;
+                            <a th:href="@{/deletemember/{id}(id=${member.memberID})}" id="delete" class="btn btn-danger deleteButton" onclick="deleteFunction()">Delete</a>
+                        </td>
+                    </tr>
+                    <tr><<span id="deleteConfirmation"></span></tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="col-sm-6 pull-center">
+            <h4>Search activity by date</h4>
+            <form th:action="@{/searchDate/}" method="get">
+                <input id="txtSearch" type="text" name="activitydate"/>
+                <button type="submit" >Search</button>
+            </form>
+            
+            <h1>Activities details</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Activity ID</th>
+                        <th>Activity Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Duration</th>
+                        <th>Members</th>
+                        <th>Actions</th>
+                        <th sec:authorize="hasAuthority('ADMIN')">Send Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr th:each="activity : ${activities}">
+                        <td th:text="${activity.activityID}">Activity ID</td>
+                        <td th:text="${activity.activityname}">Activity Name</td>
+                        <td th:text="${activity.activitydate}">Date</td>
+                        <td th:text="${activity.activitytime}">Time</td>
+                        <td th:text="${activity.duration}">Duration</td>
+                        <td th:text="${activity.memberID}">Members</td>
+                        <td>
+                            <a th:href="@{/editactivity/{id}(id=${activity.activityID})}" class="btn btn-warning editButton">Edit</a>
+                            &nbsp;&nbsp;
+                            <a th:href="@{/deleteactivity/{id}(id=${activity.activityID})}" class="btn btn-danger deleteButton">Delete</a>
+                        </td>
+                        <td sec:authorize="hasAuthority('ADMIN')" >
+                            <form th:action="@{/contact/{name}(name=${activity.memberID})}" method="post" th:object="${activity}" >
+                                <input id="sendEmail" type="hidden" name="sendEmail"/>
+                                <button class="btn btn-default" type="submit" >Send Email</button>
+                            </form>
+                            <!-- <a th:object="${activity.memberID}" id="sendEmail" name='sendEmail' th:href="@{/contact/}" type="button" class="btn btn-default contact" method='post'>
+                                Send Email
+                            </a> -->                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

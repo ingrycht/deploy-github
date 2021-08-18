@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeLeaf.org"
+      xmlns:sec="https://www.thymeLeaf.org/thymeLeaf-extras-springsecurity5">
+    <head>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../templates/design.css">
+        <title>HomePage</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body>
+        <!--<div>Welcome to Church Planner</div>-->
+        <div align="right">
+            <div sec:authorize="isAuthenticated()">
+                Welcome <b><span  sec:authentication="name">Name</span></b>
+                &nbsp;
+                <span sec:authentication="principal.authorities">Roles</span>
+                <br/>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Logout" />
+
+                </form>
+            </div>
+
+            <!-- menu bar -->
+            <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand" href="/">HomePage</a>
+                <a class="navbar-brand" href="newmember">Create New Member</a>
+                <a class="navbar-brand" href="newactivity">Add New Activity</a>
+            </nav>
+        </div>
+
+        <div class="row header" align="center">
+            <div class="col-xs-12 text-center" align="center">
+                <h1>Welcome to Church Planner</h1>
+            </div>
+        </div>
+        <div class="col-md-12" >
+            <div class="col-sm-4"></div>
+        </div>
+        <div class="col-md-12" >
+            <div  class="col-sm-6 pull-center">
+                <form th:action="@{/membername/{keyword}}" method="get">
+                    <input type="text" name="keyword"/>
+                    <button type="submit" >Search</button>
+                </form>
+                <h1>Member details</h1>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Member ID</th>
+                            <th scope="col">Member Name</th>
+                            <!--<th scope="col">Address</th>
+                            <th scope="col">Town</th>
+                            <th scope="col">City</th>
+                            <th scope="col">PostCode</th>
+                            <th scope="col">Date Of Birth</th>-->
+                            <th scope="col">Phone Number</th>
+                            <th scope="col">Email</th>
+                            <!-- sec:authorize="hasAnyAuthority('ADMIN')" 
+                            <th>Area of Interest</th>-->
+
+                            <th scope="col" sec:authorize="hasAuthority('ADMIN')">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- th is a thymeLeaf syntax -->
+                        <tr th:each="member: ${keyword}">
+                            <td th:text="${member.memberID}">Member ID</td>
+                            <td th:text="${member.name}">Member Name</td>
+                            <td th:text="${member.phone}">Phone Number</td>
+                            <td th:text="${member.email}">Email</td>
+                            <td sec:authorize="hasAuthority('ADMIN')">
+                                <a th:href="@{'/editmember/' + ${member.memberID}}" class="btn btn-warning trigger-btn editButton">Edit</a>
+                                &nbsp;&nbsp;
+                                <a th:href="@{/deletemember/{id}(id=${member.memberID})}" class="btn btn-danger deleteButton">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

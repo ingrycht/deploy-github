@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+Create a new activity
+-->
+<html xmlns:th="http://www.thymeLeaf.org"
+      xmlns:sec="https://www.thymeLeaf.org/thymeLeaf-extras-springsecurity5">
+    <head>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="webjars/bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet" />
+        <script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <title>Edit Activity</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <!--<div>Welcome to Church Planner</div>-->
+        <div align="right">
+            <div sec:authorize="isAuthenticated()">
+                Welcome <b><span  sec:authentication="name">Name</span></b>
+                &nbsp;
+                <span sec:authentication="principal.authorities">Roles</span>
+                <br/>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Logout" />
+
+                </form>
+            </div>
+        
+        <!-- menu bar -->
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="/">HomePage</a>
+            <a class="navbar-brand" href="newmember">Create New Member</a>
+            <a class="navbar-brand" href="newactivity">Add New Activity</a>
+        </nav>
+        </div>
+        <div class="container col-md-12">
+            <div align="center" class="col-md-4"></div>
+            <div align="center" class="col-md-4" sec:authorize="hasAuthority('ADMIN')">
+                <h1>Edit Activity</h1>
+                <form action="#" th:action="@{/save_activity}" th:object="${activity}" method="post">
+                    <div  class="form-group">
+                        <label >Activity ID: </label>
+                        <input class="form-control" type="text" th:field="*{activityID}" readonly="readonly" />
+                    </div>
+                    <div  class="form-group">
+                        <label >Activity Name: </label>
+                        <input class="form-control" type="text" th:field="*{activityname}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Date: </label>
+                        <input class="form-control" type="text" th:field="*{activitydate}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Time: </label>
+                        <input class="form-control" type="text" th:field="*{activitytime}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Duration: </label>
+                        <input class="form-control" type="text" th:field="*{duration}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Members Involved</label>
+                        <select class="form-control" th:field="*{memberID}" multiple="true">
+                            <option th:each="member : ${members}" th:value="${member.getMemberID()}" th:text="${member.getName()}">
+                            </option>
+                        </select>
+                        <small class="form-text text-muted">Hold Ctrl key to select multiple members</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="form-control" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+            <div align="center" class="col-md-4"></div>
+        </div>
+    </body>
+</html>
